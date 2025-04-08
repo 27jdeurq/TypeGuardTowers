@@ -123,6 +123,24 @@ function drawAllCharacter(){
     })
 }
 
+function animateTexts(){
+    for (let i = animations.length - 1; i >= 0; i--){
+        let a = animations[i]
+
+        ctx.font = `${canvas.width/30}px arial`
+        ctx.fillStyle = a.color
+
+        ctx.fillText(a.text, a.x, a.y)
+
+        a.life -= 1
+
+        if (a.life <= 0){
+            animations.splice(i,1) // Take number out of animation
+        }
+    }
+}
+
+
 
 //Create new enemies:
 
@@ -236,14 +254,26 @@ function enemyDead(enemy, index, isHit){
 
     if (isHit == "Not"){
         getPoints(enemy)
+        animations.push({
+            x: enemy.x + enemy.width/2,
+            y: enemy.y,
+            text: `+${enemy.damage}`,
+            time: enemy.damage,
+            life: "60",
+            color: "green"
+        })
+    }else{
+        animations.push({
+            x: enemy.x + enemy.width/2,
+            y: enemy.y,
+            text: `-${enemy.damage}`,
+            time: enemy.damage,
+            life: "60",
+            color: "red"
+        })
     }
 
-    animations.push({
-        x: enemy.x + enemy.width/2,
-        y: enemy.y,
-        text: "+100",
-        time: 100
-    })
+    
 
     enemies.splice(index, 1)
 }
@@ -295,7 +325,6 @@ window.addEventListener("keydown", function(event){
 
             if (enemy.text.length == 0){
                 enemyDead(enemy,index,"Not")
-                animationWord("100")
             }
         }
 
@@ -365,6 +394,21 @@ function mainMenu(){
     window.addEventListener("mousedown", mouseClick);
 }
 
+function textAll(){
+
+    text = `Points: ${points}`
+
+    ctx.font = `${canvas.width/30}px arial`
+
+    ctx.fillStyle = "black"
+
+    ctx.fillText(text, canvas.width/2 - (ctx.measureText(text).width / 2),canvas.height/20)
+
+    text2 = `Health: ${castle.health}`
+
+    ctx.fillText(text2, castle.width/2 - (ctx.measureText(text2).width / 2), (canvas.height - castle.height)-canvas.height/100)
+}
+
 
 function gameLoop(){
 
@@ -381,6 +425,8 @@ function gameLoop(){
         ctx.drawImage(images["background2"],0,0,canvas.width,canvas.height)
     
         drawAllCharacter();
+        animateTexts();
+        textAll();
     
         if (lost){
             console.log("Lost");
