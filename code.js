@@ -145,7 +145,7 @@ function animateTexts(){
 //Create new enemies:
 
 function getWord(number){
-	const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	const letters = "abcdefghijklmnopqrstuvwxyz"
     let word = ""
 
     for (let x = 0; x < number; x++){
